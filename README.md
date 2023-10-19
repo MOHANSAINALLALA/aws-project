@@ -1,55 +1,83 @@
-# cloud-computing-project
+#Module 03 Assignment 03: Programming Assignment 1
 
-# Application Setup and Cloud Environment Configuration
+Before we get started,we need to make sure that we have the following prerequisites in place:
 
-This README provides step-by-step instructions for setting up a cloud environment and running the application.
+AWS Account: We need an AWS account. Follow the steps mentioned in Canvas
 
-## Prerequisites
-- You should have an active cloud provider account (e.g., AWS).
+Step 1: Clone the Repository
+Start by cloning the repository containing the project. You can use the git clone command to do this. Open your terminal or command prompt and run:
 
-## Step 1: Create a User Role with Group Rights
+git clone https://github.com/your-username/aws-object-text-recognition.git
 
-1.1. Open your cloud provider's management console.
 
-1.2. Navigate to the Identity and Access Management (IAM) service.
+This will create a local copy of the project on your machine.
 
-1.3. Create a new IAM group (e.g., "AppGroup").
+Step 2: Configure AWS Credentials
 
-1.4. Add permissions to the group for S3, Rekognition, and SQS services.
+1. Log in to your AWS account:
+Go to https://aws.amazon.com/ and sign in with your AWS account credentials.
 
-1.5. Create a new IAM user (e.g., "AppUser") and add the user to the "AppGroup" you created.
+2. Access IAM:
+In the AWS Management Console, find "IAM" by searching in the bar at the top or under "Security, Identity, & Compliance."
 
-1.6. Generate and securely store the access and secret access keys for "AppUser."
+3. Create a Group:
+Click on "Groups" in the left panel.
+Click "Create New Group."
+Name the group, e.g., "AppGroup."
+Click "Next Step."
 
-## Step 2: Create an S3 Bucket and Upload Car Images
+4. Add Permissions:
+"AmazonRekognitionFullAccess" (for Rekognition)
+"AmazonS3FullAccess" (for S3)
+"AmazonSQSFullAccess" (for SQS)
+Click "Next Review."
 
-2.1. Open your cloud provider's management console.
+5. Review & Create Group:
+Review the settings.
+Click "Create Group."
 
-2.2. Navigate to the Simple Storage Service (S3) dashboard.
+6. Create a User:
+Click "Users" in the left panel.
+Click "Add User."
+Name the user, e.g., "mohan"
+Choose "Programmatic access" for access keys.
+Click "Next: Permissions."
 
-2.3. Create a new S3 bucket (e.g., "car-images-bucket").
+7. Add User to the Group:
+In the "Add user to group" step, add the user to "AppGroup."
+Click "Next: Review."
 
-2.4. Configure the bucket with default permissions, keeping it private by default.
+8. Review & Create User:
+Review the user's settings.
+Click "Create user."
 
-2.5. Upload the card images to the S3 bucket.
+9. Generate Access Keys:
+After creating the user, we will see a confirmation screen.
+Click "Download .csv" to save the access key and secret access key for "AppUser." Store these securely.
+Now, we have configured AWS IAM for your application, creating a group with permissions and an IAM user with access keys for authentication. These keys will be used in your application's AWSConfig to interact with AWS services securely.
 
-## Step 3: Run the Application
 
-3.1. Clone or download the application source code from the repository.
+Step 3: AWS S3 Setup
+To use AWS S3 for storing the images, make sure to have an S3 bucket set up. We can create a new bucket in the AWS S3 console.
 
-3.1. Clone or download the application source code from the repository.
+Navigate to the S3 service and create a new S3 bucket and name it "object-text-reko" (you can choose a different name, just remember to update it in the code).
 
-3.2. Open a terminal and navigate to the application directory.
+Upload images to this bucket that you want to process for object and text recognition.
 
-3.3. Configure the application with the AWS credentials (access key and secret key) of "AppUser."
+Step 4: Object Recognition
+The project performs object recognition to detect objects like cars in your images. It will send a message to the SQS queue when a car is detected.
 
-3.4. Build and run the application according to the provided instructions.
+Open the project in the IDE.
 
-## Application Console
+Run the RekognitionObjectApplication class. This will start the object recognition process.
 
-### Object Rekognition
-[OBJ REKOGNITION](images/obj-reko.png)
+The application will list the objects in the "object-text-reko" S3 bucket, detect objects, and send messages to the SQS queue for cars detected with high confidence.
 
-### text Rekognition
-[TEXT REKOGNITION](images/text-reko.png)
+Step 5: Text Detection
+The text detection part listens to the SQS queue for messages containing keywords or identifiers. It scans images for text when it receives a message.
 
+Run the RekognitionTextApplication class in your IDE.
+
+This part will listen to the SQS queue "queue-cars.fifo" created in the object recognition step.
+
+When it receives a message, it will scan the images in the "object-text-reko" S3 bucket for the specified keyword and detect any text in those images.
