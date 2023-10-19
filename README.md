@@ -37,6 +37,8 @@ This README provides step-by-step instructions for setting up a cloud environmen
 
 3.1. Clone or download the application source code from the repository.
 
+3.1. Clone or download the application source code from the repository.
+
 3.2. Open a terminal and navigate to the application directory.
 
 3.3. Configure the application with the AWS credentials (access key and secret key) of "AppUser."
